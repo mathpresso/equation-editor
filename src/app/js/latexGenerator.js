@@ -1,5 +1,8 @@
 var generateLatex = function(expr) {
 	var latexString = '';
+	if (expr.type === "Equation") {
+		expr = expr.operands.topLevelContainer
+	}
 	for (var i = 0; i < expr.length; i++) {
 		var wrapper = expr[i];
 		switch (wrapper.type) {
@@ -178,15 +181,15 @@ var bigOperatorToLatex = function(expr) {
 	}
 	operandString = generateLatex(expr.operands.operand);
 	var bigOperatorToLatexMapping = {
-        sum: '\\sum',
-        bigCap: '\\bigcap',
-        bigCup: '\\bigcup',
-        bigSqCap: '\\sqcap',
-        bigSqCup: '\\bigsqcup',
-        prod: '\\prod',
-        coProd: '\\coprod',
-        bigVee: '\\bigvee',
-        bigWedge: '\\bigwedge'
+		sum: '\\sum',
+		bigCap: '\\bigcap',
+		bigCup: '\\bigcup',
+		bigSqCap: '\\sqcap',
+		bigSqCup: '\\bigsqcup',
+		prod: '\\prod',
+		coProd: '\\coprod',
+		bigVee: '\\bigvee',
+		bigWedge: '\\bigwedge'
 	}
 	latexString = bigOperatorToLatexMapping[expr.value] + lowerLimitString + upperLimitString + operandString;
 	return latexString;
@@ -201,20 +204,20 @@ var functionToLatex = function(expr) {
 var bracketToLatex = function(expr) {
 	var latexString = '';
 	var bracketToLatexMapping = {
-        leftParenthesisBracket: '\\left(',
-        rightParenthesisBracket: '\\right)',
-        leftSquareBracket: '\\left[',
-        rightSquareBracket: '\\right]',
-        leftCurlyBracket: '\\left\\{',
-        rightCurlyBracket: '\\right\\}',
-        leftAngleBracket: '\\left\\langle',
-        rightAngleBracket: '\\right\\rangle',
-        leftFloorBracket: '\\left\\lfloor',
-        rightFloorBracket: '\\right\\rfloor',
-        leftCeilBracket: '\\left\\lceil',
-        rightCeilBracket: '\\right\\rceil'
-    };
-    latexString = bracketToLatexMapping[expr.value];
+		leftParenthesisBracket: '\\left(',
+		rightParenthesisBracket: '\\right)',
+		leftSquareBracket: '\\left[',
+		rightSquareBracket: '\\right]',
+		leftCurlyBracket: '\\left\\{',
+		rightCurlyBracket: '\\right\\}',
+		leftAngleBracket: '\\left\\langle',
+		rightAngleBracket: '\\right\\rangle',
+		leftFloorBracket: '\\left\\lfloor',
+		rightFloorBracket: '\\right\\rfloor',
+		leftCeilBracket: '\\left\\lceil',
+		rightCeilBracket: '\\right\\rceil'
+	};
+	latexString = bracketToLatexMapping[expr.value];
 	return latexString;
 }
 
@@ -262,16 +265,16 @@ var bracketPairToLatex = function(expr) {
 	var latexString = '';
 	var bracketedExpression = generateLatex(expr.operands.bracketedExpression);
 	var bracketPairToLatexMapping = {
-        "parenthesisBracket": '\\left(' + bracketedExpression + '\\right)',
-        "squareBracket": '\\left[' + bracketedExpression + '\\right]',
-        "curlyBracket": '\\left\\{' + bracketedExpression + '\\right\\}',
-        "angleBracket": '\\left\\langle' + bracketedExpression + '\\right\\rangle',
-        "floorBracket": '\\left\\lfloor' + bracketedExpression + '\\right\\rfloor',
-        "ceilBracket": '\\left\\lceil' + bracketedExpression + '\\right\\rceil',
-        "absValBracket": '\\left|' + bracketedExpression + '\\right|',
-        "normBracket": '\\left\\|' + bracketedExpression + '\\right\\|'
-    };
-    latexString = bracketPairToLatexMapping[expr.value];
+		"parenthesisBracket": '\\left(' + bracketedExpression + '\\right)',
+		"squareBracket": '\\left[' + bracketedExpression + '\\right]',
+		"curlyBracket": '\\left\\{' + bracketedExpression + '\\right\\}',
+		"angleBracket": '\\left\\langle' + bracketedExpression + '\\right\\rangle',
+		"floorBracket": '\\left\\lfloor' + bracketedExpression + '\\right\\rfloor',
+		"ceilBracket": '\\left\\lceil' + bracketedExpression + '\\right\\rceil',
+		"absValBracket": '\\left|' + bracketedExpression + '\\right|',
+		"normBracket": '\\left\\|' + bracketedExpression + '\\right\\|'
+	};
+	latexString = bracketPairToLatexMapping[expr.value];
 	return latexString;
 }
 
@@ -286,12 +289,12 @@ var integralToLatex = function(expr) {
 		upperLimitString = '^{' + generateLatex(expr.operands.upperLimit) + '}';
 	}
 	var integralToLatexMapping = {
-        'single': '\\int',
-        'double': '\\iint',
-        'triple': '\\iiint',
-        'singleContour': '\\oint',
-        'doubleContour': '\\oiint',
-        'tripleContour': '\\oiiint'
+		'single': '\\int',
+		'double': '\\iint',
+		'triple': '\\iiint',
+		'singleContour': '\\oint',
+		'doubleContour': '\\oiint',
+		'tripleContour': '\\oiiint'
 	};
 	latexString = integralToLatexMapping[expr.value] + lowerLimitString + upperLimitString;
 	return latexString;
@@ -332,7 +335,7 @@ var logLowerToLatex = function(expr) {
 }
 
 var matrixToLatex = function(expr) {
-	var latexString = '\\begin{array}{ccc}';
+	var latexString = '\\begin{cases}';
 	for (var j = 0; j < expr.operands.elements.length; j++) {
 		var row = expr.operands.elements[j];
 		var rowString = '';
@@ -342,7 +345,7 @@ var matrixToLatex = function(expr) {
 		rowString = rowString.substring(0, rowString.length - 2) + '\\\\\r\n';
 		latexString += rowString;
 	}
-	latexString += '\\end{array}';
+	latexString += '\\end{cases}';
 	return latexString;
 }
 
