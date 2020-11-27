@@ -906,11 +906,32 @@ var setupMenuEvents = function() {
         e.preventDefault();
         e.stopPropagation();
         var equation = getEquation();
-        $('#rows').blur();
-        $('#cols').blur();
-        var rows = parseInt($('#rows').val());
-        var cols = parseInt($('#cols').val());
+        var rows = parseInt($('#system_n').val());
         var matrixWrapper = new eqEd.MatrixWrapper(equation, rows, cols, 'center');
+        insertWrapper(matrixWrapper);
+    });
+
+    $(document).on('touchstart mousedown', '#system2Button', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var equation = getEquation();
+        var matrixWrapper = new eqEd.MatrixWrapper(equation, 2, 1, 'center');
+        insertWrapper(matrixWrapper);
+    });
+
+    $(document).on('touchstart mousedown', '#system3Button', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var equation = getEquation();
+        var matrixWrapper = new eqEd.MatrixWrapper(equation, 3, 1, 'center');
+        insertWrapper(matrixWrapper);
+    });
+
+    $(document).on('touchstart mousedown', '#system4Button', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var equation = getEquation();
+        var matrixWrapper = new eqEd.MatrixWrapper(equation, 4, 1, 'center');
         insertWrapper(matrixWrapper);
     });
 
